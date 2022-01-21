@@ -1,15 +1,51 @@
+#! /bin/python
+# Name:        main.py
+# Author:      Lloyd Butler
+# Revision:    v1.0
+# Description: CML automation script.
+
 """
 This script is used to automate the creation of labs in CML based on user
 requirements.
 """
 
 
+import sys
 from getpass import getpass
 import configparser
 import base64
 import requests
 import urllib3
+import time
 
+
+def menu(token, user):
+
+    """ The Main Program """
+    menu = """
+        Menu Options
+        ------------
+        1. Set credentials
+        2. Create new lab
+        3. View Labs
+        
+    """
+
+    while True:
+        print(menu)
+        option = input("Enter option (1-4, q=quit): ")
+        if option == "1":
+            createcredentials()
+        elif option == "2":
+            createlab(token, user['lab'])
+        elif option == "3":
+            showalllabs(token, user['lab'])
+        elif option.lower() == "q":
+            break
+        else:
+            print("Invalid option")
+
+    return None
 
 def createcredentials():
     """
@@ -34,6 +70,8 @@ def createcredentials():
 
     with open('config.ini', 'w', encoding='UTF-8') as conf:
         config_create.write(conf)
+    print("Creating config, please wait...")
+    time.sleep(2)
 
 
 def authenticate(username, password, address):
@@ -134,27 +172,33 @@ def labnodes(token, address):
 
 if __name__ == "__main__":
     urllib3.disable_warnings()
-    startup = input("Do you need a config file? (Y/N): ").upper()
-    if startup == "Y":
-        createcredentials()
-    read_config = configparser.ConfigParser()
-    read_config.read("config.ini")
-    credentials = read_config["USER"]
-    bearer_token = authenticate(
-        credentials["username"], credentials["password"], credentials["lab"]).strip('"')
+    while True:
+        try:
+            read_config = configparser.ConfigParser()
+            read_config.read("config.ini")
+            credentials = read_config["USER"]
+            bearer_token = authenticate(
+            credentials["username"], credentials["password"], credentials["lab"]).strip('"')
+            break
+        except:
+            print("No config file present, please create one")
+            createcredentials()
+            print("Config file created")
     node_detail = labnodes(bearer_token, credentials["lab"])
-    newlab = input("create new lab? Y/N: ")
-    if newlab == 'Y':
-        createlab(bearer_token, credentials["lab"])
-    lab_ids = showalllabs(bearer_token, credentials["lab"])
-    print("select lab to edit: ")
-    for lab_list in range(len(lab_ids)):
-        print(f"{lab_list} - {lab_ids[lab_list]}")
-    selection = lab_ids[int(input("select: "))]
-    print("select node to add: ")
-    for node_list in range(len(node_detail)):
-        print(
-            f"{node_list} - {node_detail[node_list]['data']['node_definition']}")
-    node_info = node_detail[int(input("select: "))]
-    nodenum = int(input("Number of nodes: "))
-    addnodes(bearer_token, selection, node_info, nodenum, credentials["lab"])
+    menu(bearer_token, credentials)
+    sys.exit(0)
+    # newlab = input("create new lab? Y/N: ")
+    # if newlab == 'Y':
+    #     createlab(bearer_token, credentials["lab"])
+    # lab_ids = showalllabs(bearer_token, credentials["lab"])
+    # print("select lab to edit: ")
+    # for lab_list in range(len(lab_ids)):
+    #     print(f"{lab_list} - {lab_ids[lab_list]}")
+    # selection = lab_ids[int(input("select: "))]
+    # print("select node to add: ")
+    # for node_list in range(len(node_detail)):
+    #     print(
+    #         f"{node_list} - {node_detail[node_list]['data']['node_definition']}")
+    # node_info = node_detail[int(input("select: "))]
+    # nodenum = int(input("Number of nodes: "))
+    # addnodes(bearer_token, selection, node_info, nodenum, credentials["lab"])
