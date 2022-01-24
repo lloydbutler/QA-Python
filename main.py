@@ -37,7 +37,8 @@ def menu(token, user):
         if option == "1":
             createcredentials()
         elif option == "2":
-            createlab(token, user['lab'])
+            created_lab = createlab(token, user['lab'])
+            print("Created lab id: " + str(created_lab))
         elif option == "3":
             showalllabs(token, user['lab'])
         elif option.lower() == "q":
