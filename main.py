@@ -20,7 +20,6 @@ import time
 
 
 def menu(token, user):
-
     """ The Main Program """
     menu = """
         Menu Options
@@ -52,14 +51,16 @@ def menu(token, user):
                     break
                 else:
                     selection = labs_list[int(selection_menu)]
-                    sub_menu = input(f"Do you want to add nodes to {selection}? Y/N: ")
+                    sub_menu = input(
+                        f"Do you want to add nodes to {selection}? Y/N: ")
                     if sub_menu.lower() == "y":
                         for node_list in range(len(node_detail)):
                             print(
                                 f"{node_list} - {node_detail[node_list]['data']['node_definition']}")
                         node_info = node_detail[int(input("select: "))]
                         nodenum = int(input("Number of nodes: "))
-                        addnodes(bearer_token, selection, node_info, nodenum, credentials["lab"])
+                        addnodes(bearer_token, selection, node_info,
+                                 nodenum, credentials["lab"])
                     else:
                         break
         elif option.lower() == "q":
@@ -68,6 +69,7 @@ def menu(token, user):
             print("Invalid option")
 
     return None
+
 
 def createcredentials():
     """
@@ -200,7 +202,7 @@ if __name__ == "__main__":
             read_config.read("config.ini")
             credentials = read_config["USER"]
             bearer_token = authenticate(
-            credentials["username"], credentials["password"], credentials["lab"]).strip('"')
+                credentials["username"], credentials["password"], credentials["lab"]).strip('"')
             break
         except:
             print("No config file present, please create one")
