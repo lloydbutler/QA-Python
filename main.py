@@ -150,8 +150,8 @@ def addnodes(token, lab, node, nodequantity, address):
         url = fr"https://{address}/api/v0/labs/{lab}/nodes?populate_interfaces=true"
         auth = {'Authorization': f'Bearer {token}'}
         body = {
-            "x": 0 + (i * 10),
-            "y": 0 + (i * 10),
+            "x": 0 + (i * 50),
+            "y": 0 + (i * 50),
             "label": f"{node['data']['label']} - {i}",
             "configuration": f"{node['data']['configuration']}",
             "node_definition": f"{node['data']['node_definition']}",
