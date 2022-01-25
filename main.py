@@ -28,6 +28,7 @@ def menu(token, user):
         1. Set credentials
         2. Create new lab
         3. View Labs
+        Q. Quit
         
     """
 
@@ -40,7 +41,11 @@ def menu(token, user):
             created_lab = createlab(token, user['lab'])
             print("Created lab id: " + str(created_lab))
         elif option == "3":
-            showalllabs(token, user['lab'])
+            labs_list = showalllabs(token, user['lab'])
+            print("select lab to edit: ")
+            for labs_list in range(len(labs_list)):
+                print(f"{labs_list} - {labs_list[lab_list]}")
+            selection = labs_list[int(input("select: "))]
         elif option.lower() == "q":
             break
         else:
