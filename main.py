@@ -42,10 +42,26 @@ def menu(token, user):
             print("Created lab id: " + str(created_lab))
         elif option == "3":
             labs_list = showalllabs(token, user['lab'])
-            print("select lab to edit: ")
-            for labs_list in range(len(labs_list)):
-                print(f"{labs_list} - {labs_list[lab_list]}")
-            selection = labs_list[int(input("select: "))]
+            while True:
+                print("select lab to edit: ")
+                for labs in range(len(labs_list)):
+                    print(f"{labs} - {labs_list[labs]}")
+                print("Enter lab number or Q to return: ")
+                selection_menu = (input("select: "))
+                if selection_menu.lower() == "q":
+                    break
+                else:
+                    selection = labs_list[int(selection_menu)]
+                    sub_menu = input(f"Do you want to add nodes to {selection}? Y/N: ")
+                    if sub_menu.lower() == "y":
+                        for node_list in range(len(node_detail)):
+                            print(
+                                f"{node_list} - {node_detail[node_list]['data']['node_definition']}")
+                        node_info = node_detail[int(input("select: "))]
+                        nodenum = int(input("Number of nodes: "))
+                        addnodes(bearer_token, selection, node_info, nodenum, credentials["lab"])
+                    else:
+                        break
         elif option.lower() == "q":
             break
         else:
@@ -193,18 +209,3 @@ if __name__ == "__main__":
     node_detail = labnodes(bearer_token, credentials["lab"])
     menu(bearer_token, credentials)
     sys.exit(0)
-    # newlab = input("create new lab? Y/N: ")
-    # if newlab == 'Y':
-    #     createlab(bearer_token, credentials["lab"])
-    # lab_ids = showalllabs(bearer_token, credentials["lab"])
-    # print("select lab to edit: ")
-    # for lab_list in range(len(lab_ids)):
-    #     print(f"{lab_list} - {lab_ids[lab_list]}")
-    # selection = lab_ids[int(input("select: "))]
-    # print("select node to add: ")
-    # for node_list in range(len(node_detail)):
-    #     print(
-    #         f"{node_list} - {node_detail[node_list]['data']['node_definition']}")
-    # node_info = node_detail[int(input("select: "))]
-    # nodenum = int(input("Number of nodes: "))
-    # addnodes(bearer_token, selection, node_info, nodenum, credentials["lab"])
