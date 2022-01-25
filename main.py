@@ -27,6 +27,7 @@ def menu(token, user):
         1. Set credentials
         2. Create new lab
         3. View Labs
+        4. Connect nodes
         Q. Quit
         
     """
@@ -36,33 +37,48 @@ def menu(token, user):
         option = input("Enter option (1-4, q=quit): ")
         if option == "1":
             createcredentials()
+            
         elif option == "2":
             created_lab = createlab(token, user['lab'])
             print("Created lab id: " + str(created_lab))
+            
         elif option == "3":
             labs_list = showalllabs(token, user['lab'])
+            
             while True:
+                
                 print("select lab to edit: ")
                 for labs in range(len(labs_list)):
                     print(f"{labs} - {labs_list[labs]}")
                 print("Enter lab number or Q to return: ")
                 selection_menu = (input("select: "))
+                
                 if selection_menu.lower() == "q":
                     break
+                
                 else:
                     selection = labs_list[int(selection_menu)]
                     sub_menu = input(
                         f"Do you want to add nodes to {selection}? Y/N: ")
+                    
                     if sub_menu.lower() == "y":
+                        
                         for node_list in range(len(node_detail)):
                             print(
                                 f"{node_list} - {node_detail[node_list]['data']['node_definition']}")
+                            
                         node_info = node_detail[int(input("select: "))]
                         nodenum = int(input("Number of nodes: "))
                         addnodes(bearer_token, selection, node_info,
                                  nodenum, credentials["lab"])
+                        
                     else:
                         break
+                    
+        if option == "4":
+            # create function to connect nodes
+            break
+            
         elif option.lower() == "q":
             break
         else:
